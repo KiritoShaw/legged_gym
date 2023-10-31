@@ -14,8 +14,8 @@
     * base
       * `base_task.py` 定义基类 BaseTask
       * `base_config.py` 定义基类 BaseTaskConfig
-      * `legged_robot.py` 继承 BaseTask 并定义 RL 环境
-      * `legged_robot_config.py` 用于 BaseTaskConfig 并自定义环境配置以及训练配置
+      * `legged_robot.py` 继承 BaseTask 并定义 RL 环境 LeggedRobot
+      * `legged_robot_config.py` 用于 BaseTaskConfig 并自定义环境配置 LeggedRobotCfg 以及训练配置 LeggedRobotCfgPPO
     * `__init__.py` 将上述环境以及配置文件注册成任务
   * scripts
     * `play.py` 创建少量机器人的仿真环境，用于测试训练结果
@@ -79,7 +79,7 @@ task_registry.register( "anymal_c_rough", Anymal, AnymalCRoughCfg(), AnymalCRoug
 * 训练算法 `***_runner` 是 `rsl_rl` 库中 `OnPolicyRunner` 的实例化
 * 训练配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotPPOCfg`（该类同样继承了基类 `BaseConfig`）
 
-
+## BaskTask
 
 
 
