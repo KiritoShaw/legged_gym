@@ -47,7 +47,7 @@ class TaskRegistry():
         self.env_cfgs = {}
         self.train_cfgs = {}
 
-    # used in 'legged_gym/envs/__init__.py' to register new task
+    # used in 'legged_gym/envs/__init__.py' to register new tasks
     def register(self, name: str, task_class: VecEnv, env_cfg: LeggedRobotCfg, train_cfg: LeggedRobotCfgPPO):
         self.task_classes[name] = task_class
         self.env_cfgs[name] = env_cfg
@@ -97,11 +97,12 @@ class TaskRegistry():
         # parse sim params (convert to dict first)
         sim_params = {"sim": class_to_dict(env_cfg.sim)}
         sim_params = parse_sim_params(args, sim_params)
-        env = task_class(   cfg=env_cfg,
-                            sim_params=sim_params,
-                            physics_engine=args.physics_engine,
-                            sim_device=args.sim_device,
-                            headless=args.headless)
+        # Isaac Gym VecEnv: check BaseTask in 'legged_gym/envs/base/base_task.py'
+        env = task_class(cfg=env_cfg,
+                         sim_params=sim_params,
+                         physics_engine=args.physics_engine,
+                         sim_device=args.sim_device,
+                         headless=args.headless)
         return env, env_cfg
 
     # used in 'legged_gym/scripts/train.py' to create the training algorithm named '***_runner'
@@ -140,7 +141,7 @@ class TaskRegistry():
         _, train_cfg = update_cfg_from_args(None, train_cfg, args)
 
         if log_root=="default":
-            # create directory for logged data
+            # create directory for data logging
             log_root = os.path.join(LEGGED_GYM_ROOT_DIR, 'logs', train_cfg.runner.experiment_name)
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
         elif log_root is None:
@@ -149,6 +150,7 @@ class TaskRegistry():
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
         
         train_cfg_dict = class_to_dict(train_cfg)
+        # create runner by initiating OnPolicyRunner from rsl_rl
         runner = OnPolicyRunner(env, train_cfg_dict, log_dir, device=args.rl_device)
         # save resume path before creating a new log_dir
         resume = train_cfg.runner.resume

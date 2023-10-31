@@ -11,7 +11,7 @@
 from legged_gym.utils import get_args, task_registry
 ```
 
-`main` 函数中先将参数进行解析，然后将 `args` 作为参数输入函数 `train`。函数 train 负责三个功能：
+`main` 函数中先将参数进行解析，然后将 `args` 作为参数输入函数 `train`。函数 `train` 负责三个功能：
 1. 根据 `args` 中指定的任务名创建对应的 RL 任务环境 VecEnv `env` 并返回相应的配置 `env_cfg`
 2. 根据环境 `env` 以及 `args` 创建训练算法并返回训练配置 `train_cfg`
 
@@ -26,8 +26,30 @@ if __name__ == '__main__':
     train(args)
 ```
 
-
 ## Task_registry
+
+Task_registry 类主要用在两个地方：
+
+一是 `legged_gym/envs/__init__.py` 中将 RL 环境以及相应的环境配置以及训练配置注册成一个 RL 任务，
+
+```python
+from legged_gym.utils.task_registry import task_registry
+from .anymal_c.anymal import Anymal  # RL 环境
+from .anymal_c.mixed_terrains.anymal_c_rough_config import AnymalCRoughCfg, AnymalCRoughCfgPPO  # RL 环境配置以及算法配置
+
+task_registry.register( "anymal_c_rough", Anymal, AnymalCRoughCfg(), AnymalCRoughCfgPPO() )  # 注册成任务
+```
+
+二是根据 `args` 创建对应的环境，环境配置，训练算法以及训练配置。如上一节所示。
+
+这里创建的
+
+* 环境可以参考 `legged_gym/envs/base/base_task.py` 中的 `BaseTask` 或者 `legged_gym/envs/base/legged_robot.py` 中的 
+`LeggedRobot`（该类继承了基类 `BaseTask`） 
+* 环境配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotCfg`（该类继承了基类 `BaseConfig`） 
+* 训练算法 `***_runner` 是 `rsl_rl` 库中 `OnPolicyRunner` 的实例化
+* 训练配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotPPOCfg`（该类同样继承了基类 `BaseConfig`）
+
 
 
 ---
