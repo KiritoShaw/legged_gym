@@ -10,10 +10,16 @@
 我们通过目录树介绍 legged_gym 的文件结构
 
 * legged_gym
-  * envs 
+  * envs
+    * base
+      * `base_task.py` 定义基类 BaseTask
+      * `base_config.py` 定义基类 BaseTaskConfig
+      * `legged_robot.py` 继承 BaseTask 并定义 RL 环境
+      * `legged_robot_config.py` 用于 BaseTaskConfig 并自定义环境配置以及训练配置
+    * `__init__.py` 将上述环境以及配置文件注册成任务
   * scripts
     * `play.py` 创建少量机器人的仿真环境，用于测试训练结果
-    * `train.py` 训练
+    * `train.py` 通过命令行指定任务（以及各种参数）并训练策略
   * tests
     * `test_env.py`
   * utils
@@ -22,11 +28,9 @@
     * `math.py`
     * `task_registry.py` 用于注册任务以及通过命令行参数返回 {环境、环境配置、训练算法以及算法配置}
     * `terrain.py` 用于生成各种地形
+    * `__init__.py`
   * `__init__.py` 保存了根目录路径
-
-
-
-
+    
 ## train.py
 
 从 utils 中导入 `get_args` 和 `task_registry`，前者用于解析命令行传入的参数，后者用于对注册的 RL 任务进行一些操作。
