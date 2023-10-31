@@ -79,9 +79,25 @@ task_registry.register( "anymal_c_rough", Anymal, AnymalCRoughCfg(), AnymalCRoug
 * 训练算法 `***_runner` 是 `rsl_rl` 库中 `OnPolicyRunner` 的实例化
 * 训练配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotPPOCfg`（该类同样继承了基类 `BaseConfig`）
 
-## BaskTask
+## BaseTask
 
+BaseTask 类的 `__init__()` 函数主要完成了以下工作：
+* 参数配置，主要是 Isaac gym 所需参数，例如 `sim_params`（sim 参数）、headless（是否进行渲染）、physics_device（物理解算计算设备）、
+sim_device（仿真计算设备）、并行环境数（num_envs）、观测空间维数（num_obs）、动作空间维数（num_actions）等
+* 数据池分配（allocate buffers），包括 `obs_buf`, `rew_buf`, `reset_buf` 等
+* 创建环境、仿真环境以及窗口 `gym`, `sim`, `env`, `viewer`
 
+BaseTask 主要包含了如下方法：
+
+* `step()` 以 action 作为输入，当智能体完成动作之后进行对应的物理学解算，并返回新状态（观测），奖励等信息
+* `reset_idx()` 重置选定的部分环境，往往是因为智能体触发了提前终止条件
+* `reset()` 重置全部环境
+* `render()` 实时渲染并可视化仿真训练环境
+
+此外还有
+
+* `get_observation` 获取观测
+* `get_privileged_observation` 获取特权观测 (privileged information)，该部分信息并不可以被实际部署的智能体直接获取
 
 ---
 
