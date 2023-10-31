@@ -46,7 +46,8 @@ class TaskRegistry():
         self.task_classes = {}
         self.env_cfgs = {}
         self.train_cfgs = {}
-    
+
+    # used in 'legged_gym/envs/__init__.py' to register new task
     def register(self, name: str, task_class: VecEnv, env_cfg: LeggedRobotCfg, train_cfg: LeggedRobotCfgPPO):
         self.task_classes[name] = task_class
         self.env_cfgs[name] = env_cfg
@@ -62,6 +63,7 @@ class TaskRegistry():
         env_cfg.seed = train_cfg.seed
         return env_cfg, train_cfg
     
+    # used in 'legged_gym/scripts/train.py' to make VecEnv and return the env config file as well
     def make_env(self, name, args=None, env_cfg=None) -> Tuple[VecEnv, LeggedRobotCfg]:
         """ Creates an environment either from a registered namme or from the provided config file.
 
@@ -82,6 +84,7 @@ class TaskRegistry():
             args = get_args()
         # check if there is a registered env with that name
         if name in self.task_classes:
+            # return VecEnv
             task_class = self.get_task_class(name)
         else:
             raise ValueError(f"Task with name: {name} was not registered")
@@ -101,6 +104,7 @@ class TaskRegistry():
                             headless=args.headless)
         return env, env_cfg
 
+    # used in 'legged_gym/scripts/train.py' to create the training algorithm named '***_runner'
     def make_alg_runner(self, env, name=None, args=None, train_cfg=None, log_root="default") -> Tuple[OnPolicyRunner, LeggedRobotCfgPPO]:
         """ Creates the training algorithm  either from a registered namme or from the provided config file.
 
@@ -136,6 +140,7 @@ class TaskRegistry():
         _, train_cfg = update_cfg_from_args(None, train_cfg, args)
 
         if log_root=="default":
+            # create directory for logged data
             log_root = os.path.join(LEGGED_GYM_ROOT_DIR, 'logs', train_cfg.runner.experiment_name)
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
         elif log_root is None:
@@ -145,7 +150,7 @@ class TaskRegistry():
         
         train_cfg_dict = class_to_dict(train_cfg)
         runner = OnPolicyRunner(env, train_cfg_dict, log_dir, device=args.rl_device)
-        #save resume path before creating a new log_dir
+        # save resume path before creating a new log_dir
         resume = train_cfg.runner.resume
         if resume:
             # load previously trained model
@@ -153,6 +158,7 @@ class TaskRegistry():
             print(f"Loading model from: {resume_path}")
             runner.load(resume_path)
         return runner, train_cfg
+
 
 # make global task registry
 task_registry = TaskRegistry()

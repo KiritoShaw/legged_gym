@@ -1,3 +1,39 @@
+# Notes by Shaw_ZYX
+
+建议先阅读 [minimal-isaac-gym](https://github.com/KiritoShaw/minimal-isaac-gym) 中的 `README.md` 文件，以及大致浏览一遍它的源码
+
+## train.py
+
+从 utils 中导入 `get_args` 和 `task_registry`，前者用于解析命令行传入的参数，后者用于对注册的 RL 任务进行一些操作。
+此时 task_registry 是 TaskRegistry 类的实例化对象。
+
+```python
+from legged_gym.utils import get_args, task_registry
+```
+
+`main` 函数中先将参数进行解析，然后将 `args` 作为参数输入函数 `train`。函数 train 负责三个功能：
+1. 根据 `args` 中指定的任务名创建对应的 RL 任务环境 VecEnv `env` 并返回相应的配置 `env_cfg`
+2. 根据环境 `env` 以及 `args` 创建训练算法并返回训练配置 `train_cfg`
+
+```python
+def train(args):
+    env, env_cfg = task_registry.make_env(name=args.task, args=args)
+    ppo_runner, train_cfg = task_registry.make_alg_runner(env=env, name=args.task, args=args)
+    ppo_runner.learn(num_learning_iterations=train_cfg.runner.max_iterations, init_at_random_ep_len=True)
+
+if __name__ == '__main__':
+    args = get_args()
+    train(args)
+```
+
+
+## Task_registry
+
+
+---
+
+Copied from `legged_gym/README.md`
+
 # Isaac Gym Environments for Legged Robots #
 This repository provides the environment used to train ANYmal (and other robots) to walk on rough terrain using NVIDIA's Isaac Gym.
 It includes all components needed for sim-to-real transfer: actuator network, friction & mass randomization, noisy observations and random pushes during training.  
