@@ -99,6 +99,19 @@ BaseTask 主要包含了如下方法：
 * `get_observation` 获取观测
 * `get_privileged_observation` 获取特权观测 (privileged information)，该部分信息并不可以被实际部署的智能体直接获取
 
+## LeggedRobot
+
+该类继承了上一节所介绍的 BaseTask 类，主要包含以下方法
+
+* `create_sim()` 创建仿真环境 `simulation`、地形以及环境
+* `step(actions)`：对 `actions` 进行预处理，接着转化为 `torques` 作用在机器人的各个关节上，接着进行物理解算 `simulate`，回调 
+`post_physics_step()` 并返回 `obs_buf`, `privileged_obs_buf`, `rew_buf`, `reset_buf` 等信息
+  * `post_physics_step()` 检查终止条件、计算当前观测以及奖励等
+    * `check_termination()` 终止条件包括机身触地以及超时，并更新用来指示需重置环境的 `reset_buf` 
+    * `compute_reward()` 计算奖励
+    * `reset_idx()` 重置机器人状态、上层指令以及各种 `buffer`
+    * `compute_observation()` 计算观测，如有需要增加噪声
+
 ---
 
 Copied from `legged_gym/README.md`
