@@ -150,7 +150,7 @@ class TaskRegistry():
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
         
         train_cfg_dict = class_to_dict(train_cfg)
-        # create runner by initiating OnPolicyRunner from rsl_rl
+        # create runner by initiating OnPolicyRunner imported from rsl_rl
         runner = OnPolicyRunner(env, train_cfg_dict, log_dir, device=args.rl_device)
         # save resume path before creating a new log_dir
         resume = train_cfg.runner.resume

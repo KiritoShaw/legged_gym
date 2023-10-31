@@ -2,6 +2,31 @@
 
 建议先阅读 [minimal-isaac-gym](https://github.com/KiritoShaw/minimal-isaac-gym) 中的 `README.md` 文件，以及大致浏览一遍它的源码
 
+## 项目结构概览
+
+一级目录中主要有三个文件夹：legged_gym*，licenses 以及 resources。其中最重要的自然是 legged_gym，具体放在后面再介绍。而 resources 文件夹中
+存放了各种资源，例如执行器网络，各种机器人的 URDF 文件以及 meshes 文件。
+
+我们通过目录树介绍 legged_gym 的文件结构
+
+* legged_gym
+  * envs 
+  * scripts
+    * `play.py` 创建少量机器人的仿真环境，用于测试训练结果
+    * `train.py` 训练
+  * tests
+    * `test_env.py`
+  * utils
+    * `helpers.py` 杂七杂八的东西
+    * `logger.py` 在运行 `play.py` 时用于返回各种指标以及绘制图片。可以修改该文件进行自定义。
+    * `math.py`
+    * `task_registry.py` 用于注册任务以及通过命令行参数返回 {环境、环境配置、训练算法以及算法配置}
+    * `terrain.py` 用于生成各种地形
+  * `__init__.py` 保存了根目录路径
+
+
+
+
 ## train.py
 
 从 utils 中导入 `get_args` 和 `task_registry`，前者用于解析命令行传入的参数，后者用于对注册的 RL 任务进行一些操作。
@@ -49,6 +74,8 @@ task_registry.register( "anymal_c_rough", Anymal, AnymalCRoughCfg(), AnymalCRoug
 * 环境配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotCfg`（该类继承了基类 `BaseConfig`） 
 * 训练算法 `***_runner` 是 `rsl_rl` 库中 `OnPolicyRunner` 的实例化
 * 训练配置可以参考 `legged_gym/envs/base/legged_robot_config.py` 中的 `LeggedRobotPPOCfg`（该类同样继承了基类 `BaseConfig`）
+
+
 
 
 
