@@ -112,6 +112,12 @@ BaseTask 主要包含了如下方法：
     * `reset_idx()` 重置机器人状态、上层指令以及各种 `buffer`
     * `compute_observation()` 计算观测，如有需要增加噪声
 
+## Terrain 
+
+这一节主要介绍 `legged_gym/utils` 目录下的 `terrain`, `terrain_creation` 以及 `terrain_utils`，后两个文件源自 Isaac Gym (Preview 4)
+
+(TODO)
+
 ---
 
 Copied from `legged_gym/README.md`

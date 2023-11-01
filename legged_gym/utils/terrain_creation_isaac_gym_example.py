@@ -21,7 +21,9 @@ from scipy import interpolate
 import os
 
 from isaacgym import gymutil, gymapi
-from isaacgym.terrain_utils import *
+# from isaacgym.terrain_utils import *
+from terrain_utils_isaac_gym import *
+
 from math import sqrt
 
 
@@ -86,13 +88,13 @@ for i in range(num_envs):
 initial_state = np.copy(gym.get_sim_rigid_body_states(sim, gymapi.STATE_ALL))
 
 # create all available terrain types
-num_terains = 8
+num_terains = 8  # 8 types of terrain
 terrain_width = 12.
 terrain_length = 12.
 horizontal_scale = 0.25  # [m]
 vertical_scale = 0.005  # [m]
-num_rows = int(terrain_width/horizontal_scale)
-num_cols = int(terrain_length/horizontal_scale)
+num_rows = int(terrain_width/horizontal_scale)  # 48
+num_cols = int(terrain_length/horizontal_scale)  # 48
 heightfield = np.zeros((num_terains*num_rows, num_cols), dtype=np.int16)
 
 
@@ -106,8 +108,7 @@ heightfield[3*num_rows:4*num_rows, :] = discrete_obstacles_terrain(new_sub_terra
 heightfield[4*num_rows:5*num_rows, :] = wave_terrain(new_sub_terrain(), num_waves=2., amplitude=1.).height_field_raw
 heightfield[5*num_rows:6*num_rows, :] = stairs_terrain(new_sub_terrain(), step_width=0.75, step_height=-0.5).height_field_raw
 heightfield[6*num_rows:7*num_rows, :] = pyramid_stairs_terrain(new_sub_terrain(), step_width=0.75, step_height=-0.5).height_field_raw
-heightfield[7*num_rows:8*num_rows, :] = stepping_stones_terrain(new_sub_terrain(), stone_size=1.,
-                                                                stone_distance=1., max_height=0.5, platform_size=0.).height_field_raw
+heightfield[7*num_rows:8*num_rows, :] = stepping_stones_terrain(new_sub_terrain(), stone_size=1., stone_distance=1., max_height=0.5, platform_size=0.).height_field_raw
 
 # add the terrain as a triangle mesh
 vertices, triangles = convert_heightfield_to_trimesh(heightfield, horizontal_scale=horizontal_scale, vertical_scale=vertical_scale, slope_threshold=1.5)
