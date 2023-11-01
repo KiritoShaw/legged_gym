@@ -30,7 +30,7 @@ def random_uniform_terrain(terrain, min_height, max_height, step=1, downsampled_
         downsampled_scale = terrain.horizontal_scale
 
     # switch parameters to discrete units
-    min_height = int(min_height / terrain.vertical_scale)
+    min_height = int(min_height / terrain.vertical_scale)  # vetical_scale = 0.005
     max_height = int(max_height / terrain.vertical_scale)
     step = int(step / terrain.vertical_scale)
 
