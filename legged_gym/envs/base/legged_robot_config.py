@@ -53,24 +53,24 @@ class LeggedRobotCfg(BaseConfig):
         measure_heights = True
         measured_points_x = [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8] # 1mx1.6m rectangle (without center line)
         measured_points_y = [-0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5]
-        selected = False # select a unique terrain type and pass all arguments
-        terrain_kwargs = None # Dict of arguments for selected terrain
-        max_init_terrain_level = 5 # starting curriculum state
+        selected = False  # select a unique terrain type and pass all arguments
+        terrain_kwargs = None  # Dict of arguments for selected terrain
+        max_init_terrain_level = 5  # starting curriculum state
         terrain_length = 8.
         terrain_width = 8.
-        num_rows= 10 # number of terrain rows (levels)
-        num_cols = 20 # number of terrain cols (types)
+        num_rows = 10  # number of terrain rows (levels)
+        num_cols = 20  # number of terrain cols (types)
         # terrain types: [smooth slope, rough slope, stairs up, stairs down, discrete]
         terrain_proportions = [0.1, 0.1, 0.35, 0.25, 0.2]
         # trimesh only:
-        slope_treshold = 0.75 # slopes above this threshold will be corrected to vertical surfaces
+        slope_treshold = 0.75  # slopes above this threshold will be corrected to vertical surfaces
 
     class commands:
         curriculum = False
         max_curriculum = 1.
-        num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
-        resampling_time = 10. # time before command are changed[s]
-        heading_command = True # if true: compute ang vel command from heading error
+        num_commands = 4  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+        resampling_time = 10.  # time before command are changed[s]
+        heading_command = True  # if true: compute ang vel command from heading error
         class ranges:
             lin_vel_x = [-1.0, 1.0] # min max [m/s]
             lin_vel_y = [-1.0, 1.0]   # min max [m/s]
@@ -87,7 +87,7 @@ class LeggedRobotCfg(BaseConfig):
             "joint_b": 0.}
 
     class control:
-        control_type = 'P' # P: position, V: velocity, T: torques
+        control_type = 'P'  # P: position, V: velocity, T: torques
         # PD Drive parameters:
         stiffness = {'joint_a': 10.0, 'joint_b': 15.}  # [N*m/rad]
         damping = {'joint_a': 1.0, 'joint_b': 1.5}     # [N*m*s/rad]
@@ -183,7 +183,7 @@ class LeggedRobotCfg(BaseConfig):
     class sim:
         dt =  0.005
         substeps = 1
-        gravity = [0., 0. ,-9.81]  # [m/s^2]
+        gravity = [0., 0., -9.81]  # [m/s^2]
         up_axis = 1  # 0 is y, 1 is z
 
         class physx:
@@ -206,7 +206,7 @@ class LeggedRobotCfgPPO(BaseConfig):
         init_noise_std = 1.0
         actor_hidden_dims = [512, 256, 128]
         critic_hidden_dims = [512, 256, 128]
-        activation = 'elu' # can be elu, relu, selu, crelu, lrelu, tanh, sigmoid
+        activation = 'elu'  # can be elu, relu, selu, crelu, lrelu, tanh, sigmoid
         # only for 'ActorCriticRecurrent':
         # rnn_type = 'lstm'
         # rnn_hidden_size = 512
@@ -219,9 +219,9 @@ class LeggedRobotCfgPPO(BaseConfig):
         clip_param = 0.2
         entropy_coef = 0.01
         num_learning_epochs = 5
-        num_mini_batches = 4 # mini batch size = num_envs*nsteps / nminibatches
-        learning_rate = 1.e-3 #5.e-4
-        schedule = 'adaptive' # could be adaptive, fixed
+        num_mini_batches = 4  # mini batch size = num_envs*nsteps / nminibatches
+        learning_rate = 1.e-3  # 5.e-4
+        schedule = 'adaptive'  # could be adaptive, fixed
         gamma = 0.99
         lam = 0.95
         desired_kl = 0.01
@@ -230,15 +230,15 @@ class LeggedRobotCfgPPO(BaseConfig):
     class runner:
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
-        num_steps_per_env = 24 # per iteration
-        max_iterations = 1500 # number of policy updates
+        num_steps_per_env = 24  # per iteration
+        max_iterations = 1500  # number of policy updates
 
         # logging
-        save_interval = 50 # check for potential saves every this many iterations
+        save_interval = 50  # check for potential saves every this many iterations
         experiment_name = 'test'
         run_name = ''
         # load and resume
         resume = False
-        load_run = -1 # -1 = last run
-        checkpoint = -1 # -1 = last saved model
-        resume_path = None # updated from load_run and chkpt
+        load_run = -1  # -1 = last run
+        checkpoint = -1  # -1 = last saved model
+        resume_path = None  # updated from load_run and chkpt
