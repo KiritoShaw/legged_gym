@@ -213,13 +213,16 @@ class LeggedRobotCfgPPO(BaseConfig):
         # rnn_num_layers = 1
         
     class algorithm:
+        """
+        The mini-batch size represents the size of the chunks in which the batch size is split to perform backpropagation.
+        """
         # training params
         value_loss_coef = 1.0
         use_clipped_value_loss = True
         clip_param = 0.2
         entropy_coef = 0.01
         num_learning_epochs = 5
-        num_mini_batches = 4  # mini batch size = num_envs*nsteps / nminibatches
+        num_mini_batches = 4  # mini batch size = num_envs * n_steps / n_minibatches
         learning_rate = 1.e-3  # 5.e-4
         schedule = 'adaptive'  # could be adaptive, fixed
         gamma = 0.99
@@ -228,6 +231,9 @@ class LeggedRobotCfgPPO(BaseConfig):
         max_grad_norm = 1.
 
     class runner:
+        """
+        num_steps_per_env: n_steps is the number of steps each robot takes per policy update
+        """
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 24  # per iteration
