@@ -78,17 +78,21 @@ class LeggedRobot(BaseTask):
         self._prepare_reward_function()  # 设置奖励函数：仅保留非零项并将奖励系数进行处理
         self.init_done = True
 
+    # 最关键的函数
     def step(self, actions):
         """ Apply actions, simulate, call self.post_physics_step()
 
         Args:
             actions (torch.Tensor): Tensor of shape (num_envs, num_actions_per_env)
         """
+        # 对动作进行上下限截断，避免过大动作的出现. 此处的动作为相对 nominal action 的关节位置偏差
         clip_actions = self.cfg.normalization.clip_actions
         self.actions = torch.clip(actions, -clip_actions, clip_actions).to(self.device)
+        # 在物理环境中施加动作（力矩）并更新状态; 渲染并可视化
         # step physics and render each frame
         self.render()
         for _ in range(self.cfg.control.decimation):
+            # 输入动作并计算截断后的力矩
             self.torques = self._compute_torques(self.actions).view(self.torques.shape)
             self.gym.set_dof_actuation_force_tensor(self.sim, gymtorch.unwrap_tensor(self.torques))
             self.gym.simulate(self.sim)
@@ -97,9 +101,11 @@ class LeggedRobot(BaseTask):
             self.gym.refresh_dof_state_tensor(self.sim)
         self.post_physics_step()
 
+        # 返回截断观测、截断状态、奖励、是否终止等
         # return clipped obs, clipped states (None), rewards, dones and infos
         clip_obs = self.cfg.normalization.clip_observations
         self.obs_buf = torch.clip(self.obs_buf, -clip_obs, clip_obs)
+        # 特权信息，详细参见 SCIENCE ROBOTICS 2020 年 Marco Hutter 论文中的 Privileged Learning
         if self.privileged_obs_buf is not None:
             self.privileged_obs_buf = torch.clip(self.privileged_obs_buf, -clip_obs, clip_obs)
         return self.obs_buf, self.privileged_obs_buf, self.rew_buf, self.reset_buf, self.extras
