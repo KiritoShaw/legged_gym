@@ -766,7 +766,7 @@ class LeggedRobot(BaseTask):
                 gymutil.draw_lines(sphere_geom, self.gym, self.viewer, self.envs[i], sphere_pose) 
 
     def _init_height_points(self):
-        """ Returns points at which the height measurments are sampled (in base frame)
+        """ Returns points at which the height measurements are sampled (in base frame)
 
         Returns:
             [torch.Tensor]: Tensor of shape (num_envs, self.num_height_points, 3)
