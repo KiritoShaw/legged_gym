@@ -38,8 +38,9 @@ from isaacgym import gymutil
 
 from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
 
+
 def class_to_dict(obj) -> dict:
-    if not  hasattr(obj,"__dict__"):
+    if not hasattr(obj, "__dict__"):
         return obj
     result = {}
     for key in dir(obj):
@@ -55,6 +56,7 @@ def class_to_dict(obj) -> dict:
         result[key] = element
     return result
 
+
 def update_class_from_dict(obj, dict):
     for key, val in dict.items():
         attr = getattr(obj, key, None)
@@ -63,6 +65,7 @@ def update_class_from_dict(obj, dict):
         else:
             setattr(obj, key, val)
     return
+
 
 def set_seed(seed):
     if seed == -1:
@@ -75,6 +78,7 @@ def set_seed(seed):
     os.environ['PYTHONHASHSEED'] = str(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
 
 def parse_sim_params(args, cfg):
     # code from Isaac Gym Preview 2
@@ -100,6 +104,7 @@ def parse_sim_params(args, cfg):
 
     return sim_params
 
+
 def get_load_path(root, load_run=-1, checkpoint=-1):
     try:
         runs = os.listdir(root)
@@ -123,6 +128,7 @@ def get_load_path(root, load_run=-1, checkpoint=-1):
 
     load_path = os.path.join(load_run, model)
     return load_path
+
 
 # override cfg from args (if specified)
 def update_cfg_from_args(env_cfg, cfg_train, args):
@@ -149,6 +155,7 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
             cfg_train.runner.checkpoint = args.checkpoint
 
     return env_cfg, cfg_train
+
 
 def get_args():
     custom_parameters = [
@@ -177,6 +184,7 @@ def get_args():
     if args.sim_device=='cuda':
         args.sim_device += f":{args.sim_device_id}"
     return args
+
 
 def export_policy_as_jit(actor_critic, path):
     if hasattr(actor_critic, 'memory_a'):
@@ -218,5 +226,4 @@ class PolicyExporterLSTM(torch.nn.Module):
         self.to('cpu')
         traced_script_module = torch.jit.script(self)
         traced_script_module.save(path)
-
-    
+        
