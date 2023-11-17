@@ -226,4 +226,3 @@ class PolicyExporterLSTM(torch.nn.Module):
         self.to('cpu')
         traced_script_module = torch.jit.script(self)
         traced_script_module.save(path)
-        
