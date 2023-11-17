@@ -63,7 +63,7 @@ class TaskRegistry():
         env_cfg.seed = train_cfg.seed
         return env_cfg, train_cfg
     
-    # used in 'legged_gym/scripts/train.py' to make VecEnv and return the env config file as well
+    # used in 'legged_gym/scripts/train.py' to make VecEnv and return the env config as well
     def make_env(self, name, args=None, env_cfg=None) -> Tuple[VecEnv, LeggedRobotCfg]:
         """ Creates an environment either from a registered namme or from the provided config file.
 

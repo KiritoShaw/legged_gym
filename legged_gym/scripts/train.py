@@ -39,7 +39,10 @@ import torch
 
 
 def train(args):
+    # make VecEnv and return the env configuration
     env, env_cfg = task_registry.make_env(name=args.task, args=args)
+    # 1. create runner by initiating OnPolicyRunner imported from rsl_rl
+    # 2. override cfg from args
     ppo_runner, train_cfg = task_registry.make_alg_runner(env=env, name=args.task, args=args)
     ppo_runner.learn(num_learning_iterations=train_cfg.runner.max_iterations, init_at_random_ep_len=True)
 
